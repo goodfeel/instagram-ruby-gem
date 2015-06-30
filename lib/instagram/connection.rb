@@ -13,7 +13,7 @@ module Instagram
         :url => endpoint,
       }.merge(connection_options)
 
-      Faraday::Connection.new(options.merge({ ssl: { verify: false } })) do |connection|
+      Faraday::Connection.new(options) do |connection|
         connection.use FaradayMiddleware::InstagramOAuth2, client_id, access_token
         connection.use Faraday::Request::UrlEncoded
         connection.use FaradayMiddleware::Mashify unless raw
@@ -25,7 +25,9 @@ module Instagram
         connection.use FaradayMiddleware::RaiseHttpException
         connection.use FaradayMiddleware::LoudLogger if loud_logger
         connection.adapter(adapter)
+        connection.ssl = { verify: false }
       end
     end
   end
 end
+
