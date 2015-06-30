@@ -1,5 +1,7 @@
 require 'faraday_middleware'
 Dir[File.expand_path('../../faraday/*.rb', __FILE__)].each{|f| require f}
+require 'openssl'
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 module Instagram
   # @private
@@ -25,7 +27,6 @@ module Instagram
         connection.use FaradayMiddleware::RaiseHttpException
         connection.use FaradayMiddleware::LoudLogger if loud_logger
         connection.adapter(adapter)
-        connection.ssl = { verify: false }
       end
     end
   end
